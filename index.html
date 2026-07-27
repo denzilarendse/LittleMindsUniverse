@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Little Minds Universe — A Safe Digital World for Growing Minds</title>
+	<meta name="description" content="A safe, ad-free early learning platform for children aged 2–4. Five Learning Islands, an AI companion, and a parent dashboard — proudly built for South Africa.">
+	<meta name="theme-color" content="#211B3D">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23211B3D'/%3E%3Ccircle cx='16' cy='16' r='15' stroke='%23FFD98E' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23FF7A5C'/%3E%3Ccircle cx='24' cy='10' r='2' fill='%233FA772'/%3E%3Ccircle cx='8' cy='22' r='2' fill='%23F2A93C'/%3E%3C/svg%3E">
+	<meta property="og:title" content="Little Minds Universe">
+	<meta property="og:description" content="A safe digital world where children learn, create, explore and grow — ages 2–4.">
+	<meta property="og:type" content="website">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#211B3D; --night-2:#2E2560; --night-3:#382D74;
+    --ivory:#FFF6EA; --ivory-2:#FCEFDA;
+    --coral:#FF7A5C; --coral-dark:#E85F42;
+    --leaf:#3FA772; --leaf-dark:#2C7E56;
+    --ochre:#F2A93C; --ink:#241E38; --ink-soft:#5B5478;
+    --mist:#EDE7FF; --star:#FFD98E;
+    --sidebar-w:270px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--ivory);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.display{font-family:'Baloo 2',sans-serif;}
+  .eyebrow{font-family:'Baloo 2',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.7rem;}
+  a{color:inherit;}
+  img,svg{display:block;max-width:100%;}
+  button{font-family:inherit;}
+  .btn{font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.95rem;padding:13px 24px;border-radius:100px;display:inline-block;border:none;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease;}
+  .btn-primary{background:var(--coral);color:#fff;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(255,122,92,.35);}
+  .btn-ghost{background:rgba(255,255,255,.08);color:var(--ivory);border:1px solid rgba(255,255,255,.28);}
+  .btn-ghost:hover{background:rgba(255,255,255,.16);}
+  .btn-outline{background:#fff;color:var(--ink);border:1.5px solid rgba(36,30,56,.15);}
+  .btn-outline:hover{border-color:var(--coral);}
+  .btn-block{width:100%;text-align:center;}
+  .badge-demo{display:inline-flex;align-items:center;gap:6px;background:var(--mist);color:var(--night-2);font-size:.72rem;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:16px;}
+
+  /* ===== APP SHELL ===== */
+  .app-shell{display:flex;min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{
+    width:var(--sidebar-w);flex-shrink:0;background:var(--night);color:var(--ivory);
+    display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:60;
+    transition:transform .2s ease;overflow-y:auto;
+  }
+  .sidebar-brand{display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .sidebar-brand svg{width:44px;height:44px;margin-bottom:10px;}
+  .sidebar-brand h1{font-size:1.25rem;line-height:1.2;}
+  .sidebar-nav{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:2px;}
+  .nav-item{
+    display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;
+    background:none;border:none;color:var(--mist);font-size:.9rem;text-align:left;cursor:pointer;width:100%;
+    transition:background .15s ease,color .15s ease;
+  }
+  .nav-item .ic{font-size:1.05rem;width:20px;text-align:center;flex-shrink:0;}
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .nav-item.active{background:var(--coral);color:#fff;}
+  .nav-sub{display:flex;flex-direction:column;gap:1px;margin:2px 0 6px 30px;overflow:hidden;max-height:0;transition:max-height .2s ease;}
+  .nav-sub.open{max-height:260px;}
+  .nav-sub button{
+    background:none;border:none;color:var(--mist);font-size:.82rem;text-align:left;padding:8px 10px;border-radius:8px;cursor:pointer;
+  }
+  .nav-sub button:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .nav-sub button.active{color:var(--star);font-weight:600;}
+  .sidebar-auth{padding:16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;}
+  .sidebar-auth button{flex:1;font-size:.8rem;padding:10px;}
+
+  /* TOPBAR (mobile) */
+  .topbar{
+    display:none;position:sticky;top:0;z-index:50;background:var(--night);color:#fff;
+    align-items:center;justify-content:space-between;padding:14px 16px;
+  }
+  .topbar .brand-mini{display:flex;align-items:center;gap:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1rem;}
+  .topbar .brand-mini svg{width:26px;height:26px;}
+  .icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:10px;font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:55;}
+  .sidebar-scrim.show{display:block;}
+
+  @media(max-width:900px){
+    .topbar{display:flex;}
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0);}
+    .app-shell{display:block;}
+    .main{margin-left:0 !important;}
+  }
+
+  /* MAIN */
+  .main{margin-left:var(--sidebar-w);flex:1;min-width:0;}
+  .main-top{
+    display:flex;align-items:center;justify-content:space-between;padding:22px 40px;
+    border-bottom:1px solid rgba(36,30,56,.07);background:#fff;position:sticky;top:0;z-index:20;
+  }
+  @media(max-width:900px){.main-top{padding:16px 20px;}}
+  .main-top h2{font-size:1.3rem;}
+  .account-menu{position:relative;}
+  .account-trigger{background:var(--ivory-2);border:none;width:40px;height:40px;border-radius:10px;font-size:1.1rem;cursor:pointer;}
+  .account-dropdown{
+    position:absolute;right:0;top:48px;background:#fff;border-radius:14px;box-shadow:0 16px 40px rgba(36,30,56,.18);
+    border:1px solid rgba(36,30,56,.07);padding:8px;width:170px;display:none;z-index:40;
+  }
+  .account-dropdown.open{display:block;}
+  .account-dropdown button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:8px;background:none;border:none;font-size:.88rem;cursor:pointer;color:var(--ink);}
+  .account-dropdown button:hover{background:var(--ivory-2);}
+
+  .panel{display:none;padding:36px 40px 80px;max-width:980px;}
+  .panel.active{display:block;}
+  @media(max-width:900px){.panel{padding:24px 20px 70px;}}
+  .panel-head{margin-bottom:32px;}
+  .panel-head .eyebrow{color:var(--coral-dark);display:block;margin-bottom:8px;}
+  .panel-head h2{font-size:1.7rem;margin-bottom:10px;}
+  .panel-head p{color:var(--ink-soft);max-width:600px;}
+
+  /* Reused component styles */
+  .card{background:#fff;border-radius:20px;padding:26px;border:1px solid rgba(36,30,56,.07);box-shadow:0 6px 20px rgba(36,30,56,.05);}
+  .islands-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+  .island-card{background:#fff;border-radius:20px;padding:24px;border:1px solid rgba(36,30,56,.07);box-shadow:0 6px 18px rgba(36,30,56,.05);transition:transform .15s ease;}
+  .island-card:hover{transform:translateY(-4px);}
+  .island-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:14px;}
+  .island-card h3{font-size:1.08rem;margin-bottom:6px;}
+  .island-card p{color:var(--ink-soft);font-size:.88rem;margin-bottom:12px;}
+  .tag-list{display:flex;flex-wrap:wrap;gap:6px;}
+  .tag{font-size:.7rem;background:var(--ivory-2);color:var(--ink-soft);padding:4px 10px;border-radius:100px;}
+
+  /* Hero / constellation (Islands panel) */
+  .home-hero{background:radial-gradient(ellipse 100% 100% at 50% 0%, var(--night-3), var(--night) 65%);color:#fff;border-radius:26px;padding:44px 30px;text-align:center;margin-bottom:36px;position:relative;overflow:hidden;}
+  .home-hero h2{font-size:clamp(1.6rem,3.4vw,2.2rem);margin-bottom:12px;}
+  .home-hero p{color:var(--mist);max-width:520px;margin:0 auto 22px;}
+  .constellation-wrap{position:relative;max-width:700px;margin:20px auto 0;}
+  #constellation{width:100%;height:auto;}
+  .island-node{cursor:pointer;}
+  .island-node circle.glow{opacity:.35;transition:opacity .2s ease;}
+  .island-node:hover circle.glow{opacity:.75;}
+  .island-node text{font-family:'Baloo 2',sans-serif;font-weight:600;fill:#fff;font-size:12px;}
+  .path-line{stroke:rgba(255,255,255,.28);stroke-width:1.3;stroke-dasharray:3 6;fill:none;}
+  .tooltip{position:absolute;pointer-events:none;background:var(--night-2);border:1px solid rgba(255,255,255,.15);color:#fff;padding:9px 13px;border-radius:12px;font-size:.78rem;max-width:190px;opacity:0;transform:translate(-50%,-10px);transition:opacity .15s ease;z-index:20;}
+  .tooltip.show{opacity:1;transform:translate(-50%,-16px);}
+
+  /* Milo */
+  .milo-flex{display:grid;grid-template-columns:1fr 1.2fr;gap:36px;align-items:center;background:var(--night);color:#fff;border-radius:24px;padding:36px;}
+  @media(max-width:720px){.milo-flex{grid-template-columns:1fr;}}
+  .milo-portrait{background:radial-gradient(circle at 30% 30%,var(--night-3),var(--night-2));border-radius:22px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:4rem;}
+  .milo-copy .role{color:var(--star);font-family:'Baloo 2',sans-serif;font-weight:600;margin-bottom:10px;display:block;font-size:.85rem;}
+  .milo-copy h2{font-size:1.5rem;margin-bottom:10px;}
+  .milo-copy p{color:var(--mist);margin-bottom:14px;font-size:.92rem;}
+  .milo-bubble{background:var(--night-2);border:1px solid rgba(255,255,255,.1);border-radius:14px 14px 14px 4px;padding:13px 16px;font-size:.86rem;max-width:360px;}
+  .milo-bubble b{color:var(--star);}
+  .milo-list{list-style:none;margin-top:14px;display:grid;gap:8px;}
+  .milo-list li{display:flex;gap:8px;font-size:.86rem;color:var(--mist);}
+  .milo-list li::before{content:"✦";color:var(--ochre);flex-shrink:0;}
+
+  /* Parent dashboard preview */
+  .dash-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+  .dash-top h4{font-size:1rem;}
+  .dash-top span{font-size:.76rem;color:var(--ink-soft);}
+  .bar-row{margin-bottom:14px;}
+  .bar-row-top{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:5px;color:var(--ink-soft);}
+  .bar-track{height:8px;background:var(--ivory-2);border-radius:100px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:100px;}
+  .report-card{margin-top:18px;background:var(--ivory-2);border-radius:14px;padding:14px 16px;font-size:.85rem;color:var(--ink-soft);}
+  .report-card b{color:var(--ink);}
+
+  /* Pricing */
+  .trial-banner{background:linear-gradient(135deg,#FFF3D6,#FFE7E1);border:1px solid rgba(242,169,60,.3);border-radius:18px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;margin-bottom:26px;}
+  .trial-emoji{font-size:1.4rem;flex-shrink:0;}
+  .trial-banner strong{font-family:'Baloo 2',sans-serif;display:block;font-size:.92rem;margin-bottom:2px;}
+  .trial-banner span{font-size:.82rem;color:var(--ink-soft);}
+  .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:700px;}
+  @media(max-width:640px){.pricing-grid{grid-template-columns:1fr;}}
+  .price-card{background:#fff;border-radius:22px;padding:28px;text-align:center;border:1px solid rgba(36,30,56,.08);box-shadow:0 6px 18px rgba(36,30,56,.05);}
+  .price-card-featured{background:var(--night);color:#fff;}
+  .price-tag{display:inline-block;background:var(--ivory-2);color:var(--ink-soft);font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.7rem;padding:5px 13px;border-radius:100px;margin-bottom:12px;text-transform:uppercase;}
+  .price-tag-save{background:var(--ochre);color:var(--ink);}
+  .price-card h3{font-size:1.1rem;margin-bottom:8px;}
+  .price-amount{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:2.1rem;margin-bottom:6px;}
+  .price-amount span{font-size:.9rem;font-weight:600;color:var(--ink-soft);}
+  .price-card-featured .price-amount span{color:var(--mist);}
+  .price-note{font-size:.82rem;color:var(--ink-soft);margin-bottom:18px;}
+  .price-card-featured .price-note{color:var(--mist);}
+  .price-save{color:var(--leaf);font-weight:600;}
+  .price-card-featured .price-save{color:var(--star);}
+  .price-features{list-style:none;text-align:left;margin-bottom:20px;display:grid;gap:8px;}
+  .price-features li{font-size:.85rem;color:var(--ink-soft);display:flex;gap:8px;}
+  .price-card-featured .price-features li{color:var(--mist);}
+  .price-features li::before{content:"✓";color:var(--leaf);font-weight:700;}
+  .price-card-featured .price-features li::before{color:var(--star);}
+  .btn-trial{display:block;width:100%;background:var(--coral);color:#fff;font-family:'Baloo 2',sans-serif;font-weight:600;padding:12px;border-radius:100px;font-size:.9rem;border:none;cursor:pointer;margin-bottom:8px;}
+  .btn-trial-dark{background:var(--star);color:var(--ink);}
+  .link-btn{display:block;width:100%;text-align:center;font-size:.76rem;color:var(--ink-soft);text-decoration:underline;background:none;border:none;cursor:pointer;margin-bottom:4px;font-family:'Inter',sans-serif;}
+  .price-card-featured .link-btn{color:var(--mist);}
+  .price-fx-note{font-size:.72rem;color:var(--ink-soft);margin-top:16px;max-width:520px;}
+
+  /* Forms */
+  .form-grid{display:grid;gap:16px;max-width:560px;}
+  .form-row{display:flex;flex-direction:column;gap:6px;}
+  .form-row label{font-size:.85rem;font-weight:600;}
+  .form-row .hint{font-size:.75rem;color:var(--ink-soft);font-weight:400;}
+  .form-row input, .form-row select, .form-row textarea{
+    font-family:'Inter',sans-serif;font-size:.92rem;padding:11px 14px;border-radius:12px;
+    border:1.5px solid rgba(36,30,56,.14);background:var(--ivory);color:var(--ink);width:100%;
+  }
+  .form-row textarea{resize:vertical;min-height:90px;}
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus{outline:none;border-color:var(--coral);}
+  .file-drop{
+    border:1.5px dashed rgba(36,30,56,.22);border-radius:14px;padding:18px;text-align:center;
+    background:var(--ivory);cursor:pointer;font-size:.85rem;color:var(--ink-soft);
+  }
+  .file-drop.has-file{border-color:var(--leaf);color:var(--leaf-dark);background:#F1FAF5;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:520px){.two-col{grid-template-columns:1fr;}}
+  .success-box{background:#F1FAF5;border:1px solid rgba(63,167,114,.3);border-radius:16px;padding:20px;display:none;margin-top:20px;}
+  .success-box.show{display:block;}
+  .success-box h4{color:var(--leaf-dark);margin-bottom:6px;}
+  .success-box p{font-size:.88rem;color:var(--ink-soft);}
+  .char-count{font-size:.72rem;color:var(--ink-soft);text-align:right;}
+
+  /* Certificate */
+  .certificate{
+    margin-top:24px;border-radius:20px;padding:28px;text-align:center;
+    background:linear-gradient(135deg,#FFF6EA,#FFE7C7);border:2px solid var(--ochre);display:none;
+  }
+  .certificate.show{display:block;}
+  .certificate .seal{font-size:2.4rem;margin-bottom:8px;}
+  .certificate h3{font-family:'Baloo 2',sans-serif;font-size:1.3rem;color:var(--night);margin-bottom:4px;}
+  .certificate .cert-name{font-size:1.6rem;font-family:'Baloo 2',sans-serif;color:var(--coral-dark);margin:10px 0;}
+  .certificate p{font-size:.85rem;color:var(--ink-soft);}
+
+  /* Payment method selector */
+  .method-select{max-width:360px;margin-bottom:24px;}
+  .method-panel{display:none;}
+  .method-panel.active{display:block;}
+  .method-info{background:var(--ivory-2);border-radius:16px;padding:16px 18px;font-size:.85rem;color:var(--ink-soft);margin-bottom:18px;}
+  .coming-soon{display:inline-flex;align-items:center;gap:6px;background:#FFF3D6;color:#8a6d1f;font-size:.72rem;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:14px;}
+
+  /* Safety / SA / roadmap */
+  .safety-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+  .safety-item{background:var(--night);color:#fff;border-radius:16px;padding:18px 20px;font-size:.88rem;}
+  .safety-item b{font-family:'Baloo 2',sans-serif;display:block;margin-bottom:4px;color:var(--star);}
+  .lang-grid{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0;}
+  .lang-chip{background:#fff;border:1.5px solid rgba(36,30,56,.1);color:var(--ink-soft);font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.8rem;padding:8px 15px;border-radius:100px;}
+  .lang-chip-live{background:var(--leaf);border-color:var(--leaf);color:#fff;}
+  .lang-chip-sasl{background:var(--night);border-color:var(--night);color:var(--star);}
+  .roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media(max-width:720px){.roadmap{grid-template-columns:1fr;}}
+  .roadmap-item{border-left:2px solid var(--coral);padding-left:16px;}
+  .roadmap-item .eyebrow{color:var(--coral-dark);}
+  .roadmap-item h4{font-size:1.05rem;margin:6px 0;}
+  .roadmap-item p{font-size:.85rem;color:var(--ink-soft);}
+
+  /* Universe Bot */
+  .bot-fab{
+    position:fixed;bottom:22px;right:22px;width:58px;height:58px;border-radius:50%;background:var(--coral);
+    color:#fff;font-size:1.5rem;border:none;cursor:pointer;box-shadow:0 10px 26px rgba(255,122,92,.4);z-index:70;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .bot-panel{
+    position:fixed;bottom:90px;right:22px;width:340px;max-width:88vw;max-height:70vh;background:#fff;
+    border-radius:22px;box-shadow:0 24px 60px rgba(33,27,61,.3);display:none;flex-direction:column;overflow:hidden;z-index:70;
+  }
+  .bot-panel.open{display:flex;}
+  .bot-header{background:var(--night);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;}
+  .bot-header h4{font-size:.95rem;}
+  .bot-header button{background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;}
+  .bot-body{padding:14px 16px;overflow-y:auto;flex:1;}
+  .faq-item{border-bottom:1px solid rgba(36,30,56,.08);}
+  .faq-q{width:100%;text-align:left;background:none;border:none;padding:11px 2px;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;color:var(--ink);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .2s ease;font-size:.82rem;color:var(--ink-soft);padding:0 2px;}
+  .faq-a.open{max-height:200px;padding-bottom:12px;}
+  .bot-divider{margin:14px 0;font-size:.78rem;color:var(--ink-soft);text-align:center;position:relative;}
+  .bot-support-form .form-row{margin-bottom:10px;}
+  .ref-box{background:var(--ivory-2);border-radius:12px;padding:12px 14px;font-size:.8rem;margin-top:10px;display:none;}
+  .ref-box.show{display:block;}
+
+  /* Auth modal */
+  .modal-scrim{position:fixed;inset:0;background:rgba(33,27,61,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-scrim.open{display:flex;}
+  .modal-box{background:#fff;border-radius:22px;padding:30px;max-width:380px;width:100%;}
+  .modal-tabs{display:flex;gap:6px;background:var(--ivory-2);padding:5px;border-radius:100px;margin-bottom:20px;}
+  .modal-tab{flex:1;border:none;background:transparent;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.85rem;padding:9px;border-radius:100px;cursor:pointer;color:var(--ink-soft);}
+  .modal-tab.active{background:var(--night);color:#fff;}
+
+  /* Footer */
+  .app-footer{border-top:1px solid rgba(36,30,56,.08);padding:20px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.76rem;color:var(--ink-soft);}
+  @media(max-width:900px){.app-footer{padding:18px 20px;}}
+  .modal-close{float:right;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink-soft);}
+
+  /* ===== MINI-GAMES & INTERACTIVE QUIZ STYLES ===== */
+  .drag-drop-container { display: flex; justify-content: space-around; align-items: center; margin-top: 30px; flex-wrap: wrap; gap: 20px; }
+  .animal { width: 110px; height: 110px; background-color: var(--star); border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: grab; font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); user-select: none; margin-bottom: 15px; color: var(--ink); }
+  .animal:active { cursor: grabbing; transform: scale(0.95); }
+  .habitat { width: 160px; height: 160px; border: 3px dashed var(--night-3); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-family: 'Baloo 2', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--ink-soft); background-color: var(--ivory-2); margin-bottom: 15px; transition: 0.3s; }
+  .habitat.correct { background-color: #E8F5E9; border-color: var(--leaf); color: var(--leaf-dark); }
+  #game-message { text-align: center; margin-top: 20px; font-family: 'Baloo 2', sans-serif; font-size: 1.3rem; font-weight: 700; height: 30px; }
+
+  .quiz-panel-inner { background: #fff; border: 1px solid rgba(36,30,56,.07); border-radius: 20px; padding: 30px; flex: 1; min-width: 300px; box-shadow: 0 6px 20px rgba(36,30,56,.05); }
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+  @media(max-width:520px){.options-grid{grid-template-columns: 1fr;}}
+  .option-btn { background: var(--ivory); color: var(--ink); border: 2px solid var(--ivory-2); padding: 15px; font-family: 'Baloo 2', sans-serif; font-size: 1.05rem; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.2s; text-align: center; }
+  .option-btn:hover:not(:disabled) { background-color: var(--mist); transform: translateY(-2px); border-color: var(--night-3); }
+  .next-btn { background-color: var(--coral); color: white; width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 12px; font-family: 'Baloo 2', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: none; transition: 0.2s; }
+  .next-btn:hover { background-color: var(--coral-dark); }
+</style>
+  </head>
+  <body>
+
+	<div class="sidebar-scrim" id="sidebarScrim" onclick="closeSidebar()"></div>
+
+	<div class="app-shell">
+
+	  <aside class="sidebar" id="sidebar">
+		<div class="sidebar-brand">
+		  <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#FFD98E" stroke-width="1.5"/><circle cx="16" cy="16" r="3" fill="#FF7A5C"/><circle cx="24" cy="10" r="2" fill="#3FA772"/><circle cx="8" cy="22" r="2" fill="#F2A93C"/><path d="M16 16 L24 10 M16 16 L8 22" stroke="#FFD98E" stroke-width="1" stroke-dasharray="2 3"/></svg>
+		  <h1>Little Minds<br>Universe</h1>
+		</div>
+		<nav class="sidebar-nav">
+		  <button class="nav-item active" data-panel="islands" onclick="showPanel('islands', this)"><span class="ic">🧠</span>Learning Islands</button>
+		  <button class="nav-item" data-panel="games" onclick="showPanel('games', this)"><span class="ic">🎮</span>Play & Earn</button>
+		  <button class="nav-item" data-panel="milo" onclick="showPanel('milo', this)"><span class="ic">🦊</span>Milo</button>
+		  <button class="nav-item" data-panel="parents" onclick="showPanel('parents', this)"><span class="ic">👪</span>Parents Dashboard</button>
+		  <button class="nav-item" data-panel="pricing" onclick="showPanel('pricing', this)"><span class="ic">💳</span>Pricing &amp; Trial</button>
+
+		  <button class="nav-item" onclick="toggleSub()"><span class="ic">🏦</span>Payments <span style="margin-left:auto;font-size:.75rem;" id="paymentsCaret">▾</span></button>
+		  <div class="nav-sub" id="paymentsSub">
+			<button data-method="payfast" onclick="showPanel('payments', null); setMethod('payfast')">PayFast</button>
+			<button data-method="peach" onclick="showPanel('payments', null); setMethod('peach')">Peach Payments</button>
+			<button data-method="card" onclick="showPanel('payments', null); setMethod('card')">Visa / Mastercard</button>
+			<button data-method="eft" onclick="showPanel('payments', null); setMethod('eft')">EFT</button>
+			<button data-method="paypal" onclick="showPanel('payments', null); setMethod('paypal')">PayPal</button>
+		  </div>
+
+		  <button class="nav-item" data-panel="teacher" onclick="showPanel('teacher', this)"><span class="ic">🍎</span>Teacher Registration</button>
+		  <button class="nav-item" data-panel="uploads" onclick="showPanel('uploads', this)"><span class="ic">📄</span>Document Uploads</button>
+		  <button class="nav-item" data-panel="safety" onclick="showPanel('safety', this)"><span class="ic">🛡️</span>Safety</button>
+		  <button class="nav-item" data-panel="sa" onclick="showPanel('sa', this)"><span class="ic">🌍</span>Made in SA</button>
+		  <button class="nav-item" data-panel="roadmap" onclick="showPanel('roadmap', this)"><span class="ic">🗺️</span>Roadmap</button>
+		</nav>
+		<div class="sidebar-auth">
+		  <button class="btn btn-outline" onclick="openAuth('login')">Log In</button>
+		  <button class="btn btn-primary" onclick="openAuth('signup')">Sign Up</button>
+		</div>
+	  </aside>
+
+	  <div class="main">
+		<div class="topbar">
+		  <div style="display:flex;align-items:center;gap:10px;">
+			<button class="icon-btn" onclick="openSidebar()" aria-label="Open menu">☰</button>
+			<div class="brand-mini">
+			  <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#FFD98E" stroke-width="1.5"/><circle cx="16" cy="16" r="3" fill="#FF7A5C"/></svg>
+			  Little Minds Universe
+			</div>
+		  </div>
+		  <button class="icon-btn" onclick="toggleAccountMenu(event)" aria-label="Account menu">👤</button>
+		</div>
+
+		<div class="main-top" id="desktopTopbar">
+		  <h2 id="panelTitle">Learning Islands</h2>
+		  <div class="account-menu">
+			<button class="account-trigger" onclick="toggleAccountMenu(event)">☰</button>
+			<div class="account-dropdown" id="accountDropdown">
+			  <button onclick="openAuth('login')">Log In</button>
+			  <button onclick="openAuth('signup')">Sign Up</button>
+			</div>
+		  </div>
+		</div>
+
+		<!-- ================= LEARNING ISLANDS ================= -->
+		<section class="panel active" id="panel-islands">
+		  <div class="home-hero">
+			<span class="eyebrow" style="color:var(--star);">A digital universe for ages 2–4</span>
+			<h2>Helping raise curious, creative, kind children.</h2>
+			<p>Five learning islands, one AI companion, and a world built to keep children safe while they play.</p>
+			<div class="constellation-wrap">
+			  <svg id="constellation" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+				<path class="path-line" d="M100,100 L260,60 L400,120 L540,70 L610,180 L400,120" />
+				<g class="island-node" data-title="Brain Builder Island" data-desc="Letters, counting, shapes, memory and logic." transform="translate(100,100)">
+				  <circle class="glow" r="22" fill="#FF7A5C"/><circle r="8" fill="#FF7A5C"/>
+				  <text x="0" y="36" text-anchor="middle">🧠 Brain Builder</text>
+				</g>
+				<g class="island-node" data-title="Creativity Island" data-desc="Drawing, music, story-building." transform="translate(260,60)">
+				  <circle class="glow" r="22" fill="#F2A93C"/><circle r="8" fill="#F2A93C"/>
+				  <text x="0" y="-16" text-anchor="middle">🎨 Creativity</text>
+				</g>
+				<g class="island-node" data-title="Discovery Island" data-desc="Animals, space, oceans, cultures." transform="translate(400,120)">
+				  <circle class="glow" r="22" fill="#3FA772"/><circle r="8" fill="#3FA772"/>
+				  <text x="0" y="36" text-anchor="middle">🌍 Discovery</text>
+				</g>
+				<g class="island-node" data-title="Wisdom Island" data-desc="Kindness, sharing, emotional growth." transform="translate(540,70)">
+				  <circle class="glow" r="22" fill="#FFD98E"/><circle r="8" fill="#FFD98E"/>
+				  <text x="0" y="-16" text-anchor="middle">❤️ Wisdom</text>
+				</g>
+				<g class="island-node" data-title="Language Island" data-desc="12 official languages, in progress." transform="translate(610,180)">
+				  <circle class="glow" r="22" fill="#9B8CFF"/><circle r="8" fill="#9B8CFF"/>
+				  <text x="0" y="36" text-anchor="middle">🗣 Language</text>
+				</g>
+			  </svg>
+			  <div class="tooltip" id="tooltip"><strong id="tt-title"></strong><br><span id="tt-desc"></span></div>
+			</div>
+		  </div>
+
+		  <div class="islands-grid">
+			<div class="island-card">
+			  <div class="island-icon" style="background:#FFE7E1;">🧠</div>
+			  <h3>Brain Builder Island</h3>
+			  <p>Alphabet, letter sounds, counting, shapes and colours through match games and puzzles.</p>
+			  <div class="tag-list"><span class="tag">Logic</span><span class="tag">Memory</span><span class="tag">Problem solving</span></div>
+			</div>
+			<div class="island-card">
+			  <div class="island-icon" style="background:#FDEBD0;">🎨</div>
+			  <h3>Creativity Island</h3>
+			  <p>Digital drawing, painting, music and story building. "Create your own magical animal."</p>
+			  <div class="tag-list"><span class="tag">Drawing</span><span class="tag">Music</span><span class="tag">Storytelling</span></div>
+			</div>
+			<div class="island-card">
+			  <div class="island-icon" style="background:#DFF3E7;">🌍</div>
+			  <h3>Discovery Island</h3>
+			  <p>Animals, plants, weather, space, oceans, the human body and different cultures.</p>
+			  <div class="tag-list"><span class="tag">Nature</span><span class="tag">Science</span><span class="tag">Culture</span></div>
+			</div>
+			<div class="island-card">
+			  <div class="island-icon" style="background:#FFF3D6;">❤️</div>
+			  <h3>Wisdom Island</h3>
+			  <p>Kindness, sharing, respect, emotions, confidence and helping others.</p>
+			  <div class="tag-list"><span class="tag">Character</span><span class="tag">Emotions</span></div>
+			</div>
+			<div class="island-card">
+			  <div class="island-icon" style="background:#EAE5FF;">🗣</div>
+			  <h3>Language Island</h3>
+			  <p>Vocabulary, story reading, speech practice and songs — launching in English, Afrikaans and isiXhosa, expanding toward all 12 official languages.</p>
+			  <div class="tag-list"><span class="tag">English</span><span class="tag">Afrikaans</span><span class="tag">isiXhosa</span><span class="tag">+9 more</span></div>
+			</div>
+		  </div>
+		</section>
+
+		<!-- ================= PLAY & EARN (ANIMAL HABITAT GAME) ================= -->
+		<section class="panel" id="panel-games">
+		  <div class="panel-head">
+			<span class="eyebrow">Interactive Learning</span>
+			<h2>Play & Earn: South African Habitats</h2>
+			<p>Drag the animal blocks into their correct native environment boxes!</p>
+		  </div>
+
+		  <div class="card">
+			<div class="drag-drop-container">
+			  <div>
+                <div class="animal" draggable="true" id="penguin">Penguin 🐧</div>
+                <div class="animal" draggable="true" id="lion">Lion 🦁</div>
+                <div class="animal" draggable="true" id="springbok">Springbok 🦌</div>
+			  </div>
+
+			  <div>
+                <div class="habitat" id="coast" data-match="penguin">Coast</div>
+                <div class="habitat" id="savannah" data-match="lion">Savannah</div>
+                <div class="habitat" id="karoo" data-match="springbok">Karoo</div>
+			  </div>
+			</div>
+			<div id="game-message"></div>
+		  </div>
+		</section>
+
+		<!-- ================= MILO & INTERACTIVE QUIZ ================= -->
+		<section class="panel" id="panel-milo">
+		  <div class="panel-head">
+			<span class="eyebrow">AI Learning Companion</span>
+			<h2>Meet Milo the Explorer</h2>
+			<p>Friend, teacher, guide and encourager — Milo walks every child through their own path.</p>
+		  </div>
+
+		  <div class="milo-flex">
+			<div class="milo-portrait">🦊✨</div>
+			<div class="milo-copy">
+			  <span class="role">Friend · Teacher · Guide · Encourager</span>
+			  <h2>Adapts the moment a child struggles</h2>
+			  <p>Milo reads stories, asks questions, and gently changes course instead of letting a child get stuck or frustrated.</p>
+			  <div class="milo-bubble">"I noticed counting is tricky today — <b>let's count animals together</b> instead!" 🐘🦁🐒</div>
+			  <ul class="milo-list">
+				<li>Reads stories aloud and pauses to ask questions</li>
+				<li>Notices frustration and adapts the activity in real time</li>
+				<li>Celebrates small wins with encouragement, not pressure</li>
+				<li>Helps children discover the answer themselves</li>
+			  </ul>
+			</div>
+		  </div>
+
+		  <!-- MILO'S INTERACTIVE QUIZ (MATH, SPELLING, SA FLAG) -->
+		  <hr style="margin:40px 0; border:none; border-top:1px solid rgba(36,30,56,.07);">
+		  <div class="panel-head" style="margin-bottom: 20px;">
+			<span class="eyebrow">Interactive Demo</span>
+			<h2>Try a Curriculum Challenge</h2>
+		  </div>
+
+		  <div class="quiz-panel-inner">
+			<h3 id="quiz-question" style="font-family:'Baloo 2',sans-serif; font-size:1.4rem; color:var(--night); margin-bottom:10px;">Loading question...</h3>
+			<div style="background:var(--mist); padding:12px 16px; border-radius:12px; display:inline-block; font-size:0.9rem; font-weight:600; color:var(--night-2); margin-bottom:10px;" id="milo-chat">
+			  🦊 Milo says: "Hello! Ready to test your brain? Pick an answer below!"
+			</div>
+			<div class="options-grid" id="quiz-options"></div>
+			<button class="next-btn" id="quiz-next" onclick="loadNextQuestion()">Next Question ➡️</button>
+		  </div>
+
+		</section>
+
+		<!-- ================= PARENTS DASHBOARD ================= -->
+		<section class="panel" id="panel-parents">
+		  <div class="panel-head">
+			<span class="eyebrow">Parent Platform</span>
+			<h2>See how your child is growing — every week.</h2>
+			<p>A calm, jargon-free view of progress. No comparisons, no pressure.</p>
+		  </div>
+		  <div class="card" style="max-width:560px;">
+			<div class="dash-top"><h4>Amara's week</h4><span>Age 3 · Week of Jul 20</span></div>
+			<div class="bar-row"><div class="bar-row-top"><span>Language</span><span>5 new words</span></div><div class="bar-track"><div class="bar-fill" style="width:78%;background:#9B8CFF;"></div></div></div>
+			<div class="bar-row"><div class="bar-row-top"><span>Creativity</span><span>3 activities</span></div><div class="bar-track"><div class="bar-fill" style="width:64%;background:#F2A93C;"></div></div></div>
+			<div class="bar-row"><div class="bar-row-top"><span>Memory &amp; Logic</span><span>Steady progress</span></div><div class="bar-track"><div class="bar-fill" style="width:52%;background:#FF7A5C;"></div></div></div>
+			<div class="bar-row"><div class="bar-row-top"><span>Emotional learning</span><span>Sharing &amp; kindness</span></div><div class="bar-track"><div class="bar-fill" style="width:70%;background:#3FA772;"></div></div></div>
+			<div class="report-card"><b>This week:</b> Amara explored colours, learned five new words, and completed three creativity activities.</div>
+		  </div>
+		  <p class="badge-demo" style="margin-top:20px;">🔧 Demo data — a real dashboard needs the backend described in the build notes</p>
+		</section>
+
+		<!-- ================= PRICING ================= -->
+		<section class="panel" id="panel-pricing">
+		  <div class="panel-head">
+			<span class="eyebrow">Family Plans</span>
+			<h2>Simple pricing, cancel anytime.</h2>
+			<p>Priced in Rand, paid by card or EFT via PayFast.</p>
+		  </div>
+		  <div class="trial-banner">
+			<span class="trial-emoji">🎁</span>
+			<div><strong>Try it free for 7 days.</strong><span>Your card is only charged after day 7 — cancel anytime before then and you won't be billed a cent.</span></div>
+		  </div>
+		  <div class="pricing-grid">
+			<div class="price-card">
+			  <span class="price-tag">Monthly</span>
+			  <h3>Basic Family Plan</h3>
+			  <div class="price-amount">R80<span>/month</span></div>
+			  <p class="price-note">7-day free trial, then cancel anytime.</p>
+			  <ul class="price-features"><li>Full access to all 5 Learning Islands</li><li>Milo, the AI learning companion</li><li>Weekly parent progress reports</li></ul>
+			  <button type="button" class="btn-trial" onclick="payWithPayfast('monthly', false)">Start Free Trial</button>
+			  <button type="button" class="link-btn" onclick="payWithPayfast('monthly', true)">or pay now, skip the trial · R80.00</button>
+			  <a href="https://paypal.me/YOUR_PAYPAL_ME_USERNAME/4.75USD" target="_blank" rel="noopener" class="link-btn" style="opacity:.7;font-size:.72rem;">international card? Pay via PayPal (USD)</a>
+			</div>
+			<div class="price-card price-card-featured">
+			  <span class="price-tag price-tag-save">Best Value</span>
+			  <h3>Annual Family Plan</h3>
+			  <div class="price-amount">R600<span>/year</span></div>
+			  <p class="price-note price-save">You save R360 vs. paying monthly</p>
+			  <ul class="price-features"><li>Everything in the Basic plan</li><li>Two months free vs. monthly billing</li><li>Priority access to new islands</li></ul>
+			  <button type="button" class="btn-trial btn-trial-dark" onclick="payWithPayfast('annual', false)">Start Free Trial</button>
+			  <button type="button" class="link-btn" style="color:var(--mist);" onclick="payWithPayfast('annual', true)">or pay now, skip the trial · R600.00</button>
+			  <a href="https://paypal.me/YOUR_PAYPAL_ME_USERNAME/35.65USD" target="_blank" rel="noopener" class="link-btn" style="color:var(--mist);opacity:.7;font-size:.72rem;">international card? Pay via PayPal (USD)</a>
+			</div>
+		  </div>
+		  <p class="price-fx-note">Payments are processed by PayFast in Rand — Visa, Mastercard, debit, credit and Instant EFT all accepted. PayPal (billed in USD) is offered as a backup for parents outside South Africa.</p>
+		</section>
+
+		<!-- ================= PAYMENTS (method dropdown) ================= -->
+		<section class="panel" id="panel-payments">
+		  <div class="panel-head">
+			<span class="eyebrow">Ways to Pay</span>
+			<h2>Choose a payment method</h2>
+			<p>Every method below settles to Little Minds Universe securely.</p>
+		  </div>
+		  <div class="form-row method-select">
+			<label for="methodSelect">Payment method</label>
+			<select id="methodSelect" onchange="setMethod(this.value)">
+			  <option value="payfast">PayFast (recurring billing)</option>
+			  <option value="peach">Peach Payments (mobile SDK)</option>
+			  <option value="card">Visa / Mastercard</option>
+			  <option value="eft">EFT (Stitch)</option>
+			  <option value="paypal">PayPal (international fallback)</option>
+			</select>
+		  </div>
+
+		  <div class="method-panel active" id="method-payfast">
+			<div class="method-info">PayFast is our primary South African gateway — Rand-native, with real recurring billing built in. Use the buttons below to start a plan.</div>
+			<button type="button" class="btn btn-primary" onclick="payWithPayfast('monthly', false)">Start Monthly Trial (R80/mo)</button>
+			<button type="button" class="btn btn-outline" style="margin-left:10px;" onclick="payWithPayfast('annual', false)">Start Annual Trial (R600/yr)</button>
+		  </div>
+
+		  <div class="method-panel" id="method-peach">
+			<span class="coming-soon">🔧 Coming soon</span>
+			<div class="method-info">Peach Payments is planned for in-app mobile checkout once the native app exists, via their mobile SDK. This needs a Peach merchant account and SDK integration in the app build — it isn't something a website alone can offer.</div>
+			<button type="button" class="btn btn-outline" onclick="showPanel('pricing', null)">Use PayFast instead</button>
+		  </div>
+
+		  <div class="method-panel" id="method-card">
+			<div class="method-info">Visa and Mastercard (debit and credit) are already accepted — they run through the PayFast checkout above, not a separate card processor. You don't need to pick this specifically; just choose PayFast and enter your card details on their secure page.</div>
+			<button type="button" class="btn btn-primary" onclick="setMethod('payfast'); document.getElementById('methodSelect').value='payfast';">Go to PayFast checkout</button>
+		  </div>
+
+		  <div class="method-panel" id="method-eft">
+			<span class="coming-soon">🔧 Coming soon</span>
+			<div class="method-info">Instant EFT via Stitch is planned as a lower-fee alternative to card payments. It requires its own API integration and a Stitch merchant account. In the meantime, PayFast also offers Instant EFT as one of its built-in payment options at checkout.</div>
+			<button type="button" class="btn btn-outline" onclick="setMethod('payfast'); document.getElementById('methodSelect').value='payfast';">Use Instant EFT via PayFast</button>
+		  </div>
+
+		  <div class="method-panel" id="method-paypal">
+			<div class="method-info">For parents outside South Africa without a PayFast-supported card. Billed in USD since PayPal doesn't support Rand for South African accounts.</div>
+			<a href="https://paypal.me/YOUR_PAYPAL_ME_USERNAME/4.75USD" target="_blank" rel="noopener" class="btn btn-primary">Pay Monthly via PayPal ($4.75)</a>
+			<a href="https://paypal.me/YOUR_PAYPAL_ME_USERNAME/35.65USD" target="_blank" rel="noopener" class="btn btn-outline" style="margin-left:10px;">Pay Annual via PayPal ($35.65)</a>
+		  </div>
+		</section>
+
+		<!-- ================= TEACHER REGISTRATION ================= -->
+		<section class="panel" id="panel-teacher">
+		  <div class="panel-head">
+			<span class="eyebrow">Creator Platform</span>
+			<h2>Teacher Registration</h2>
+			<p>Approved educators create islands content and get paid for it. All applications are reviewed for child safety and qualifications.</p>
+		  </div>
+		  <span class="badge-demo">🔧 Demo mode — needs Firebase/Supabase to actually store applications</span>
+		  <form class="form-grid" id="teacherForm" onsubmit="submitTeacherForm(event)">
+			<div class="two-col">
+			  <div class="form-row"><label for="t-name">Full name</label><input type="text" id="t-name" required></div>
+			  <div class="form-row"><label for="t-email">Email</label><input type="email" id="t-email" required></div>
+			</div>
+			<div class="form-row">
+			  <label for="t-spec">Specialization (subject / age group)</label>
+			  <select id="t-spec" required>
+				<option value="">Select one…</option>
+				<option>Brain Builder (Logic &amp; Numeracy) — Ages 2–4</option>
+				<option>Creativity &amp; Arts — Ages 2–4</option>
+				<option>Discovery &amp; Science — Ages 2–4</option>
+				<option>Wisdom &amp; Emotional Learning — Ages 2–4</option>
+				<option>Language &amp; Literacy — Ages 2–4</option>
+			  </select>
+			</div>
+			<div class="form-row">
+			  <label for="t-motivation">Motivation statement <span class="hint">— shown to parents on your profile</span></label>
+			  <textarea id="t-motivation" maxlength="600" required placeholder="Tell parents why you'd be a great fit…"></textarea>
+			</div>
+			<div class="form-row">
+			  <label>Selfie (face only)</label>
+			  <div class="file-drop" onclick="document.getElementById('t-selfie').click()" id="t-selfie-drop">📷 Tap to upload a clear photo of your face</div>
+			  <input type="file" id="t-selfie" accept="image/*" style="display:none;" onchange="markFile(this,'t-selfie-drop')">
+			</div>
+			<div class="two-col">
+			  <div class="form-row">
+				<label>Qualifications</label>
+				<div class="file-drop" onclick="document.getElementById('t-quals').click()" id="t-quals-drop">📎 Upload document</div>
+				<input type="file" id="t-quals" style="display:none;" onchange="markFile(this,'t-quals-drop')">
+			  </div>
+			  <div class="form-row">
+				<label>ID document</label>
+				<div class="file-drop" onclick="document.getElementById('t-id').click()" id="t-id-drop">📎 Upload document</div>
+				<input type="file" id="t-id" style="display:none;" onchange="markFile(this,'t-id-drop')">
+			  </div>
+			</div>
+			<div class="two-col">
+			  <div class="form-row"><label for="t-bank">Bank name</label><input type="text" id="t-bank" required></div>
+			  <div class="form-row"><label for="t-acc">Account number</label><input type="text" inputmode="numeric" id="t-acc" required></div>
+			</div>
+			<button type="submit" class="btn btn-primary" style="max-width:220px;">Submit Application</button>
+		  </form>
+		  <div class="success-box" id="teacherSuccess">
+			<h4>✓ Application received</h4>
+			<p>Thanks — in a live version of this site, your documents would now be securely stored and queued for review. This demo doesn't actually store anything.</p>
+		  </div>
+		</section>
+
+		<!-- ================= DOCUMENT UPLOADS (parent) ================= -->
+		<section class="panel" id="panel-uploads">
+		  <div class="panel-head">
+			<span class="eyebrow">Parent Tools</span>
+			<h2>Document Uploads</h2>
+			<p>Upload a birth certificate or similar document to generate a Digital Certificate of Competence for your child's age group.</p>
+		  </div>
+		  <span class="badge-demo">🔧 Files aren't actually uploaded anywhere in this demo — the certificate below is generated instantly from what you type, just to show the idea</span>
+		  <form class="form-grid" id="uploadForm" onsubmit="generateCertificate(event)">
+			<div class="two-col">
+			  <div class="form-row"><label for="c-name">Child's name</label><input type="text" id="c-name" required></div>
+			  <div class="form-row"><label for="c-dob">Date of birth</label><input type="date" id="c-dob" required></div>
+			</div>
+			<div class="form-row">
+			  <label>Birth certificate or ID document</label>
+			  <div class="file-drop" onclick="document.getElementById('c-doc').click()" id="c-doc-drop">📄 Tap to upload</div>
+			  <input type="file" id="c-doc" style="display:none;" onchange="markFile(this,'c-doc-drop')">
+			</div>
+			<button type="submit" class="btn btn-primary" style="max-width:260px;">Generate Certificate of Competence</button>
+		  </form>
+		  <div class="certificate" id="certificate">
+			<div class="seal">🏅</div>
+			<h3>Certificate of Competence</h3>
+			<div class="cert-name" id="cert-name">—</div>
+			<p id="cert-detail">—</p>
+		  </div>
+		</section>
+
+		<!-- ================= SAFETY ================= -->
+		<section class="panel" id="panel-safety">
+		  <div class="panel-head">
+			<span class="eyebrow">Built for young children first</span>
+			<h2>Safety isn't a feature. It's the foundation.</h2>
+		  </div>
+		  <div class="safety-grid">
+			<div class="safety-item"><b>No public communication</b>Children never message strangers or each other.</div>
+			<div class="safety-item"><b>No advertisements</b>Ever — this is a learning space, not a marketplace.</div>
+			<div class="safety-item"><b>Parent approval required</b>For every profile, purchase and new feature.</div>
+			<div class="safety-item"><b>Reviewed content only</b>Every story, game and lesson passes a safety check.</div>
+			<div class="safety-item"><b>Data protection</b>Built around children's privacy from day one.</div>
+			<div class="safety-item"><b>Screen-time controls</b>Set healthy limits from the parent dashboard.</div>
+		  </div>
+		</section>
+
+		<!-- ================= MADE IN SA / LANGUAGES ================= -->
+		<section class="panel" id="panel-sa">
+		  <div class="panel-head">
+			<span class="eyebrow">South African Market Advantage</span>
+			<h2>A proudly African early learning platform.</h2>
+			<p>Built with local languages, local animals and local stories at its core.</p>
+		  </div>
+		  <div class="tag-list" style="margin-bottom:32px;">
+			<span class="tag">African stories</span><span class="tag">Local animals</span><span class="tag">isiXhosa &amp; Afrikaans</span><span class="tag">Cultural learning</span><span class="tag">Community values</span>
+		  </div>
+		  <h3 style="font-size:1.1rem;margin-bottom:6px;">All 12 official languages. Every voice welcome.</h3>
+		  <p style="color:var(--ink-soft);font-size:.88rem;margin-bottom:6px;">South Africa has 12 official languages, including South African Sign Language — we're building toward all of them.</p>
+		  <div class="lang-grid">
+			<span class="lang-chip lang-chip-live">English</span>
+			<span class="lang-chip lang-chip-live">Afrikaans</span>
+			<span class="lang-chip lang-chip-live">isiXhosa</span>
+			<span class="lang-chip">isiZulu</span>
+			<span class="lang-chip">Sepedi</span>
+			<span class="lang-chip">Sesotho</span>
+			<span class="lang-chip">Setswana</span>
+			<span class="lang-chip">siSwati</span>
+			<span class="lang-chip">Tshivenda</span>
+			<span class="lang-chip">Xitsonga</span>
+			<span class="lang-chip">isiNdebele</span>
+			<span class="lang-chip lang-chip-sasl">South African Sign Language</span>
+		  </div>
+		  <p style="font-size:.78rem;color:var(--ink-soft);">🟢 Live at launch · ⚪ On the roadmap. South African Sign Language will use video lessons presented by Deaf educators and interpreters — not machine-generated signing.</p>
+		</section>
+
+		<!-- ================= ROADMAP ================= -->
+		<section class="panel" id="panel-roadmap">
+		  <div class="panel-head">
+			<span class="eyebrow">Long-term vision</span>
+			<h2>One universe that grows with every child.</h2>
+		  </div>
+		  <div class="roadmap">
+			<div class="roadmap-item"><span class="eyebrow">Age 2–4</span><h4>Foundation learning</h4><p>Islands, Milo, and the core habits of curiosity and kindness.</p></div>
+			<div class="roadmap-item"><span class="eyebrow">Age 5–7</span><h4>Reading, writing, mathematics</h4><p>Structured early-grade skills.</p></div>
+			<div class="roadmap-item"><span class="eyebrow">Age 8–12</span><h4>Coding, science, entrepreneurship</h4><p>Creativity matures into making.</p></div>
+		  </div>
+		</section>
+
+		<div class="app-footer">
+		  <span>© 2026 Little Minds Universe. A safe digital world where children learn, create, explore and grow.</span>
+		  <span>Preschools · Daycare Centres · Homeschool Groups</span>
+		</div>
+
+	  </div>
+	</div>
+
+	<!-- ================= UNIVERSE BOT ================= -->
+	<button class="bot-fab" onclick="toggleBot()" aria-label="Open Universe Bot">🤖</button>
+	<div class="bot-panel" id="botPanel">
+	  <div class="bot-header"><h4>🤖 Universe Bot</h4><button onclick="toggleBot()">✕</button></div>
+	  <div class="bot-body">
+		<div id="faqList"></div>
+		<div class="bot-divider">Didn't find your answer?</div>
+		<form class="bot-support-form" id="supportForm" onsubmit="submitSupportForm(event)">
+		  <div class="form-row"><input type="text" placeholder="Name" id="s-name" required></div>
+		  <div class="form-row"><input type="email" placeholder="Email" id="s-email" required></div>
+		  <div class="form-row"><input type="tel" placeholder="Cell number" id="s-cell" required></div>
+		  <div class="form-row">
+			<textarea id="s-message" maxlength="500" placeholder="Describe your problem…" required oninput="document.getElementById('sCharCount').textContent = 500 - this.value.length + ' left'"></textarea>
+			<span class="char-count" id="sCharCount">500 left</span>
+		  </div>
+		  <button type="submit" class="btn btn-primary btn-block">Send</button>
+		</form>
+		<div class="ref-box" id="refBox"></div>
+	  </div>
+	</div>
+
+	<!-- ================= AUTH MODAL ================= -->
+	<div class="modal-scrim" id="authModal" onclick="if(event.target===this) closeAuth()">
+	  <div class="modal-box">
+		<button class="modal-close" onclick="closeAuth()">✕</button>
+		<div class="modal-tabs">
+		  <button class="modal-tab active" id="authTabLogin" onclick="setAuthTab('login')">Log In</button>
+		  <button class="modal-tab" id="authTabSignup" onclick="setAuthTab('signup')">Sign Up</button>
+		</div>
+		<span class="badge-demo">🔧 Demo mode — needs Firebase/Supabase Auth</span>
+		<form id="authFormLogin" class="form-grid" onsubmit="event.preventDefault(); alert('Demo only — connect Firebase/Supabase Auth to make login real.');">
+		  <div class="form-row"><label>Email</label><input type="email" required></div>
+		  <div class="form-row"><label>Password</label><input type="password" required></div>
+		  <button type="submit" class="btn btn-primary btn-block">Log In</button>
+		</form>
+		<form id="authFormSignup" class="form-grid" style="display:none;" onsubmit="event.preventDefault(); alert('Demo only — connect Firebase/Supabase Auth to make sign-up real.');">
+		  <div class="form-row"><label>I am a…</label><select><option>Parent</option><option>Teacher</option></select></div>
+		  <div class="form-row"><label>Full name</label><input type="text" required></div>
+		  <div class="form-row"><label>Email</label><input type="email" required></div>
+		  <div class="form-row"><label>Password</label><input type="password" required></div>
+		  <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+		</form>
+	  </div>
+	</div>
+
+<script>
+  // ---- Sidebar / panel navigation ----
+  const panelTitles = {
+    islands:'Learning Islands', games:'Play & Earn', milo:'Milo', parents:'Parents Dashboard', pricing:'Pricing & Trial',
+    payments:'Payments', teacher:'Teacher Registration', uploads:'Document Uploads',
+    safety:'Safety', sa:'Made in SA', roadmap:'Roadmap'
+  };
+  function showPanel(name, navEl){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+name).classList.add('active');
+    document.querySelectorAll('.nav-item[data-panel]').forEach(b=>b.classList.remove('active'));
+    if(navEl) navEl.classList.add('active');
+    document.getElementById('panelTitle').textContent = panelTitles[name] || '';
+    closeSidebar();
+    window.scrollTo(0,0);
+  }
+  function toggleSub(){
+    document.getElementById('paymentsSub').classList.toggle('open');
+    const caret = document.getElementById('paymentsCaret');
+    caret.textContent = document.getElementById('paymentsSub').classList.contains('open') ? '▴' : '▾';
+  }
+  function openSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarScrim').classList.add('show'); }
+  function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarScrim').classList.remove('show'); }
+  function toggleAccountMenu(e){ e.stopPropagation(); document.getElementById('accountDropdown').classList.toggle('open'); }
+  document.addEventListener('click', ()=> document.getElementById('accountDropdown').classList.remove('open'));
+
+  // ---- Constellation tooltip ----
+  const nodes = document.querySelectorAll('.island-node');
+  const tooltip = document.getElementById('tooltip');
+  const wrap = document.querySelector('.constellation-wrap');
+  nodes.forEach(node=>{
+    node.addEventListener('mouseenter', ()=>{
+      const rect = node.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      document.getElementById('tt-title').textContent = node.dataset.title;
+      document.getElementById('tt-desc').textContent = node.dataset.desc;
+      tooltip.style.left = (rect.left - wrapRect.left + rect.width/2) + 'px';
+      tooltip.style.top = (rect.top - wrapRect.top) + 'px';
+      tooltip.classList.add('show');
+    });
+    node.addEventListener('mouseleave', ()=> tooltip.classList.remove('show'));
+  });
+
+  // ---- PayFast checkout ----
+  const PAYFAST_MERCHANT_ID = 'PAYFAST_MERCHANT_ID';   // TODO: replace
+  const PAYFAST_MERCHANT_KEY = 'PAYFAST_MERCHANT_KEY'; // TODO: replace
+  const PAYFAST_URL = 'https://sandbox.payfast.co.za/eng/process'; // switch to https://www.payfast.co.za/eng/process when live
+  const PAYFAST_PLANS = {
+    monthly: { amount: 80.00, itemName: 'Basic Family Plan (Monthly)', frequency: 3, cycles: 0 },
+    annual:  { amount: 600.00, itemName: 'Annual Family Plan', frequency: 6, cycles: 1 },
+  };
+  function payWithPayfast(planKey, skipTrial){
+    const plan = PAYFAST_PLANS[planKey];
+    const fields = {
+      merchant_id: PAYFAST_MERCHANT_ID, merchant_key: PAYFAST_MERCHANT_KEY,
+      return_url: window.location.origin + window.location.pathname + '?status=success',
+      cancel_url: window.location.origin + window.location.pathname + '?status=cancelled',
+      notify_url: window.location.origin + '/payfast-notify', // TODO: real backend endpoint
+      item_name: 'Little Minds Universe – ' + plan.itemName,
+      subscription_type: '1', recurring_amount: plan.amount.toFixed(2),
+      frequency: String(plan.frequency), cycles: String(plan.cycles),
+    };
+    if(skipTrial){ fields.amount = plan.amount.toFixed(2); }
+    else {
+      fields.amount = '0.00';
+      const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+7);
+      fields.billing_date = trialEnd.toISOString().slice(0,10);
+    }
+    const form = document.createElement('form');
+    form.method='POST'; form.action=PAYFAST_URL;
+    Object.entries(fields).forEach(([k,v])=>{
+      const i=document.createElement('input'); i.type='hidden'; i.name=k; i.value=v; form.appendChild(i);
+    });
+    document.body.appendChild(form); form.submit();
+  }
+
+  // ---- Payments method switch ----
+  function setMethod(method){
+    document.querySelectorAll('.method-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('method-'+method).classList.add('active');
+    document.getElementById('methodSelect').value = method;
+    document.querySelectorAll('.nav-sub button').forEach(b=>b.classList.toggle('active', b.dataset.method===method));
+  }
+
+  // ---- File input helper ----
+  function markFile(input, dropId){
+    const drop = document.getElementById(dropId);
+    if(input.files && input.files[0]){
+      drop.textContent = '✓ ' + input.files[0].name;
+      drop.classList.add('has-file');
+    }
+  }
+
+  // ---- Teacher form ----
+  function submitTeacherForm(e){
+    e.preventDefault();
+    document.getElementById('teacherSuccess').classList.add('show');
+    e.target.reset();
+    document.querySelectorAll('#panel-teacher .file-drop').forEach(d=>d.classList.remove('has-file'));
+  }
+
+  // ---- Certificate generator ----
+  function generateCertificate(e){
+    e.preventDefault();
+    const name = document.getElementById('c-name').value.trim();
+    const dob = new Date(document.getElementById('c-dob').value);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if(m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    let group = 'General Learner';
+    if(age >= 2 && age <= 4) group = 'Foundation Explorer (Ages 2–4)';
+    else if(age < 2) group = 'Not yet eligible — Little Minds Universe is designed for ages 2–4';
+    else group = 'Outside current age range (2–4) — future Ages 5–7 track coming';
+    document.getElementById('cert-name').textContent = name || 'Your Child';
+    document.getElementById('cert-detail').textContent = `Verified age ${isNaN(age)?'—':age} · ${group}`;
+    document.getElementById('certificate').classList.add('show');
+  }
+
+  // ---- Universe Bot ----
+  function toggleBot(){ document.getElementById('botPanel').classList.toggle('open'); }
+  const FAQS = [
+    { q:'How do I activate the trial?', a:'Go to Pricing & Trial in the sidebar and tap "Start Free Trial" on either plan. No charge happens until day 7.' },
+    { q:'How do teachers get paid?', a:'Teachers register via the Teacher Registration panel with their banking details. Payouts are handled once an application is approved (backend not yet connected in this demo).' },
+    { q:'How do I upload documents?', a:'Use the Document Uploads panel for a child\u2019s birth certificate, or Teacher Registration for qualifications, ID and a selfie.' },
+    { q:'What payment methods are accepted?', a:'PayFast (cards + Instant EFT) is primary, with PayPal as a backup for parents outside South Africa. See the Payments panel for details.' },
+    { q:'Is my child\u2019s data safe?', a:'Yes — see the Safety panel. No ads, no public communication, and all content is reviewed before publishing.' },
+    { q:'Which languages are supported?', a:'English, Afrikaans and isiXhosa at launch, expanding to all 12 official South African languages including Sign Language. See Made in SA.' },
+  ];
+  const faqList = document.getElementById('faqList');
+  FAQS.forEach((item, i)=>{
+    const wrap = document.createElement('div'); wrap.className='faq-item';
+    wrap.innerHTML = `<button class="faq-q" onclick="toggleFaq(${i})">${item.q}<span id="faqIcon${i}">+</span></button><div class="faq-a" id="faqA${i}">${item.a}</div>`;
+    faqList.appendChild(wrap);
+  });
+  function toggleFaq(i){
+    const a = document.getElementById('faqA'+i);
+    const icon = document.getElementById('faqIcon'+i);
+    const open = a.classList.toggle('open');
+    icon.textContent = open ? '–' : '+';
+  }
+  function submitSupportForm(e){
+    e.preventDefault();
+    const ref = 'LMU-' + Math.random().toString(36).slice(2,8).toUpperCase();
+    const box = document.getElementById('refBox');
+    box.innerHTML = `We've received your query. Reference <b>${ref}</b>. A human support agent will respond within 2 business days.`;
+    box.classList.add('show');
+    e.target.reset();
+    document.getElementById('sCharCount').textContent = '500 left';
+  }
+
+  // ---- Auth modal ----
+  function openAuth(tab){
+    document.getElementById('authModal').classList.add('open');
+    setAuthTab(tab);
+    document.getElementById('accountDropdown').classList.remove('open');
+  }
+  function closeAuth(){ document.getElementById('authModal').classList.remove('open'); }
+  function setAuthTab(tab){
+    document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
+    document.getElementById('authTabSignup').classList.toggle('active', tab==='signup');
+    document.getElementById('authFormLogin').style.display = tab==='login' ? 'grid' : 'none';
+    document.getElementById('authFormSignup').style.display = tab==='signup' ? 'grid' : 'none';
+  }
+
+  // =========================================
+  // GAME LOGIC: Animal Habitats
+  // =========================================
+  const animals = document.querySelectorAll('.animal');
+  const habitats = document.querySelectorAll('.habitat');
+  const gameMessage = document.getElementById('game-message');
+  let matchedAnimals = 0;
+
+  animals.forEach(animal => {
+      animal.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text', e.target.id);
+      });
+  });
+
+  habitats.forEach(habitat => {
+      habitat.addEventListener('dragover', (e) => e.preventDefault());
+
+      habitat.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const draggedId = e.dataTransfer.getData('text');
+          const matchId = habitat.getAttribute('data-match');
+
+          if (draggedId === matchId) {
+              const draggedElement = document.getElementById(draggedId);
+              habitat.innerHTML = '';
+              habitat.appendChild(draggedElement);
+              habitat.classList.add('correct');
+              
+              draggedElement.setAttribute('draggable', 'false');
+              draggedElement.style.cursor = 'default';
+              
+              matchedAnimals++;
+              gameMessage.innerText = "Great match! 🌟";
+              gameMessage.style.color = "var(--leaf)";
+              
+              if (matchedAnimals === 3) {
+                  setTimeout(() => {
+                      gameMessage.innerText = "🎉 All animals are home! You earned a badge!";
+                  }, 500);
+              }
+          } else {
+              gameMessage.innerText = "Oops! Not quite right. Try again!";
+              gameMessage.style.color = "var(--coral-dark)";
+              setTimeout(() => gameMessage.innerText = "", 2000);
+          }
+      });
+  });
+
+  // =========================================
+  // QUIZ LOGIC: Milo's Interactive Corner (3 Questions)
+  // =========================================
+  const miloResponses = {
+      success: ["Awesome job! 🌟", "Spot on! 🎉", "High five! ✋"],
+      fail: ["Not quite! Look closer. 🤔", "Oops! Give it another go. 📖"],
+      encourage: ["You can do this!", "Let's try again!"]
+  };
+
+  const curriculum = [
+      { q: "What is 2 + 3?", opts: ["4", "5", "6", "3"], ans: "5" },
+      { q: "What is the correct spelling of 'cat'?", opts: ["Kat", "Catt", "Cat", "Katt"], ans: "Cat" },
+      { q: "What colours are on the South African flag?", opts: ["Red and Blue only", "Green, Black, Gold", "Red, Blue, Green, Black, White, Gold", "Pink and Yellow"], ans: "Red, Blue, Green, Black, White, Gold" }
+  ];
+
+  let quizIndex = 0;
+  const quizQuestion = document.getElementById('quiz-question');
+  const quizOptions = document.getElementById('quiz-options');
+  const quizNextBtn = document.getElementById('quiz-next');
+  const miloChat = document.getElementById('milo-chat');
+
+  function loadQuiz(index) {
+      quizOptions.innerHTML = '';
+      quizNextBtn.style.display = 'none';
+      const data = curriculum[index];
+      quizQuestion.innerText = data.q;
+
+      data.opts.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerText = opt;
+          btn.onclick = () => checkQuiz(opt, data.ans, btn);
+          quizOptions.appendChild(btn);
+      });
+  }
+
+  function checkQuiz(selected, correct, btnEl) {
+      const allBtns = document.querySelectorAll('.option-btn');
+      allBtns.forEach(b => b.disabled = true);
+
+      if (selected === correct) {
+          btnEl.style.backgroundColor = "var(--leaf)";
+          btnEl.style.color = "#fff";
+          btnEl.style.borderColor = "var(--leaf-dark)";
+          miloChat.innerText = "🦊 Milo says: " + miloResponses.success[Math.floor(Math.random() * miloResponses.success.length)];
+          quizNextBtn.style.display = 'block';
+      } else {
+          btnEl.style.backgroundColor = "var(--coral)";
+          btnEl.style.color = "#fff";
+          btnEl.style.borderColor = "var(--coral-dark)";
+          miloChat.innerText = "🦊 Milo says: " + miloResponses.fail[Math.floor(Math.random() * miloResponses.fail.length)];
+
+          setTimeout(() => {
+              allBtns.forEach(b => b.disabled = false);
+              btnEl.style.backgroundColor = "var(--ivory)";
+              btnEl.style.color = "var(--ink)";
+              btnEl.style.borderColor = "var(--ivory-2)";
+              miloChat.innerText = "🦊 Milo says: " + miloResponses.encourage[Math.floor(Math.random() * miloResponses.encourage.length)];
+          }, 2000);
+      }
+  }
+
+  function loadNextQuestion() {
+      quizIndex++;
+      if (quizIndex < curriculum.length) {
+          miloChat.innerText = "🦊 Milo says: Here is the next one!";
+          loadQuiz(quizIndex);
+      } else {
+          quizQuestion.innerText = "🎉 Quiz Complete!";
+          quizOptions.innerHTML = '';
+          quizNextBtn.style.display = 'none';
+          miloChat.innerText = "🦊 Milo says: You finished all the challenges today! 🌟";
+      }
+  }
+
+  // Initialize first quiz question
+  loadQuiz(quizIndex);
+</script>
+  </body>
+</html>
+
