@@ -15,11 +15,8 @@
   "categories": ["education", "kids", "family", "lifestyle"],
   "prefer_related_applications": false,
   "icons": [
-    {
-      "src": "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Ccircle%20cx='16'%20cy='16'%20r='15'%20fill='%23211B3D'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='15'%20stroke='%23FFD98E'%20stroke-width='1.5'%20fill='none'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3'%20fill='%23FF7A5C'/%3E%3Ccircle%20cx='24'%20cy='10'%20r='2'%20fill='%233FA772'/%3E%3Ccircle%20cx='8'%20cy='22'%20r='2'%20fill='%23F2A93C'/%3E%3C/svg%3E",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
