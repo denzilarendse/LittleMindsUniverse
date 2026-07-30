@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Icon Maker · Little Minds Universe</title>
+<style>
+  :root{--night:#211B3D;--coral:#FF7A5C;--leaf:#3FA772;--ochre:#F2A93C;--star:#FFD98E;--ivory:#FFF6EA;--mist:#cfc8ec}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ivory);min-height:100vh;padding:26px 18px 80px;
+    background:radial-gradient(900px 520px at 80% -10%,#382D74,transparent 60%),radial-gradient(700px 460px at -5% 30%,#2E2560,transparent 55%),var(--night);overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.6;
+    background-image:radial-gradient(1.4px 1.4px at 20% 30%,#fff,transparent),radial-gradient(1.2px 1.2px at 70% 20%,#ffe9b8,transparent),radial-gradient(1.6px 1.6px at 40% 70%,#fff,transparent),radial-gradient(1.1px 1.1px at 85% 60%,#cfe3ff,transparent);
+    background-size:520px 520px;animation:tw 5s ease-in-out infinite alternate}
+  @keyframes tw{from{opacity:.3}to{opacity:.8}}
+  h1{font-size:1.7rem;font-weight:800;letter-spacing:-.3px;margin-bottom:6px}
+  h1 .o{display:inline-block;animation:bob 4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  p.lead{color:var(--mist);font-size:.9rem;max-width:46ch;margin-bottom:22px;line-height:1.55}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+  .card{background:#2E2560;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:16px;box-shadow:0 14px 38px rgba(0,0,0,.35)}
+  .card h3{font-size:.95rem;margin-bottom:3px}
+  .card small{color:var(--mist);font-size:.72rem;display:block;margin-bottom:12px}
+  .prev{display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(#1b1540 0% 25%,#15102e 0% 50%) 50%/18px 18px;border-radius:14px;padding:12px;position:relative}
+  canvas{width:120px;height:120px;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,.45)}
+  .ring{position:absolute;width:96px;height:96px;border:2px dashed rgba(255,217,142,.7);border-radius:50%;pointer-events:none}
+  button{display:block;width:100%;margin-top:12px;background:var(--coral);color:#fff;border:none;border-radius:999px;padding:11px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:inherit;transition:transform .12s ease,box-shadow .12s ease}
+  button:active{transform:scale(.95)}
+  button:hover{box-shadow:0 10px 22px rgba(255,122,92,.4)}
+  .steps{margin-top:24px;background:#2E2560;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:18px}
+  .steps b{color:var(--star)}
+  .steps ol{margin:10px 0 0 18px;color:var(--mist);font-size:.84rem;line-height:1.6;display:grid;gap:7px}
+  .steps code{background:rgba(255,255,255,.1);color:var(--star);padding:1px 6px;border-radius:6px;font-size:.78rem}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(18px);background:var(--leaf);color:#fff;font-weight:800;padding:12px 22px;border-radius:999px;box-shadow:0 14px 32px rgba(63,167,114,.5);opacity:0;transition:.3s ease;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+  <h1><span class="o">🪐</span> Icon Maker</h1>
+  <p class="lead">Draws your constellation logo and exports the three PNGs Google Play needs. Tap each download — the files land in your phone's Downloads, already named correctly.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>App icon</h3><small>Fills the frame · 512 px</small>
+      <div class="prev"><canvas id="std" width="512" height="512"></canvas></div>
+      <button onclick="save('std',512,'icon-512.png')">⬇ icon-512.png</button>
+    </div>
+    <div class="card">
+      <h3>App icon</h3><small>Smaller copy · 192 px</small>
+      <div class="prev"><canvas id="std2" width="512" height="512"></canvas></div>
+      <button onclick="saveDown('std',192,'icon-192.png')">⬇ icon-192.png</button>
+    </div>
+    <div class="card">
+      <h3>Maskable</h3><small>Inside the safe ring · 512 px</small>
+      <div class="prev"><canvas id="mask" width="512" height="512"></canvas><span class="ring"></span></div>
+      <button onclick="save('mask',512,'icon-maskable-512.png')">⬇ icon-maskable-512.png</button>
+    </div>
+  </div>
+
+  <div class="steps">
+    <b>Next, back in your repo (Step 6c & 6d below):</b>
+    <ol>
+      <li>Upload the 3 PNGs from Downloads to the <b>root</b> of the repo (the + button → Upload files). Commit.</li>
+      <li>Edit <code>manifest.webmanifest</code> and swap the icon list for the one I give you. Commit.</li>
+      <li>Re-scan on PWABuilder. The two reds should flip green.</li>
+    </ol>
+  </div>
+
+  <div class="toast" id="toast">✓ Saved to Downloads</div>
+
+<script>
+  var C={night:'#211B3D',coral:'#FF7A5C',leaf:'#3FA772',ochre:'#F2A93C',star:'#FFD98E'};
+  function draw(ctx,size,scale){
+    ctx.clearRect(0,0,size,size);
+    var g=ctx.createRadialGradient(size*0.34,size*0.3,0,size*0.5,size*0.5,size*0.72);
+    g.addColorStop(0,'#382D74'); g.addColorStop(1,C.night);
+    ctx.fillStyle=g; ctx.fillRect(0,0,size,size);
+    var cx=size/2, cy=size/2, R=size*0.40*scale;
+    ctx.strokeStyle=C.star; ctx.lineWidth=Math.max(2,size*0.012);
+    ctx.setLineDash([size*0.02,size*0.03]); ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=C.coral; ctx.beginPath(); ctx.arc(cx,cy,R*0.20,0,Math.PI*2); ctx.fill();
+    function sat(a,col,r){var x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R;ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+    sat(-0.7,C.leaf,R*0.13); sat(2.4,C.ochre,R*0.13); sat(0.9,'#9B8CFF',R*0.10);
+    ctx.strokeStyle='rgba(255,217,142,.55)'; ctx.lineWidth=Math.max(1,size*0.006);
+    ctx.setLineDash([size*0.012,size*0.02]); ctx.beginPath();
+    ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(-0.7)*R,cy+Math.sin(-0.7)*R);
+    ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(2.4)*R,cy+Math.sin(2.4)*R); ctx.stroke(); ctx.setLineDash([]);
+  }
+  function paint(id,scale){var cv=document.getElementById(id);draw(cv.getContext('2d'),512,scale);}
+  paint('std',0.92); paint('std2',0.92); paint('mask',0.62);
+  function dl(url,name){var a=document.createElement('a');a.href=url;a.download=name;a.click();toast();}
+  function save(id,px,name){dl(document.getElementById(id).toDataURL('image/png'),name);}
+  function saveDown(id,px,name){var t=document.createElement('canvas');t.width=px;t.height=px;t.getContext('2d').drawImage(document.getElementById(id),0,0,px,px);dl(t.toDataURL('image/png'),name);}
+  var tt; function toast(){var e=document.getElementById('toast');e.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){e.classList.remove('show');},1600);}
+</script>
+</body>
+</html>
