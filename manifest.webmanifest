@@ -1,0 +1,25 @@
+{
+  "id": "/",
+  "name": "Little Minds Universe — Safe Learning for Ages 2–12",
+  "short_name": "Little Minds",
+  "description": "A safe, ad-free digital universe with five learning islands, an AI companion, and CAPS-aligned play in English, Afrikaans and isiXhosa — proudly built for South Africa.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
+  "orientation": "any",
+  "background_color": "#211B3D",
+  "theme_color": "#211B3D",
+  "categories": ["education", "kids", "family", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Ccircle%20cx='16'%20cy='16'%20r='15'%20fill='%23211B3D'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='15'%20stroke='%23FFD98E'%20stroke-width='1.5'%20fill='none'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3'%20fill='%23FF7A5C'/%3E%3Ccircle%20cx='24'%20cy='10'%20r='2'%20fill='%233FA772'/%3E%3Ccircle%20cx='8'%20cy='22'%20r='2'%20fill='%23F2A93C'/%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
