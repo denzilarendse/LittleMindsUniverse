@@ -904,5 +904,214 @@ function botSupport(e){
 
 setLang('en');
 </script>
+<!-- ===== PAID-STUDENT UNLOCK · drop-in, additive, safe ===== -->
+<script>
+(function(){
+  // Only run on the build we expect; otherwise do nothing (cannot break the page).
+  if(typeof openIsland!=='function') return;
+  var $=function(id){return document.getElementById(id);};
+  var ga=function(){return $('gameArea')||$('game-area');};
+
+  // Week-1 game keys (match your existing islands)
+  var W1={'brain-builder':'sort','creativity':'paint','discovery':'sound','wisdom':'emo','language':'let'};
+
+  // 8 weeks per island: [title, tags, blurb, free(1/0), gameKey]
+  var WEEKS={
+   'brain-builder':[
+     ['Sort by colour','maths','match the buckets',1,'sort'],
+     ['Count to 5','maths','how many apples?',0,'bb2'],
+     ['Bigger & smaller','maths','compare two',0,''],
+     ['Patterns ABAB','coding','what comes next?',0,''],
+     ['Shapes hunt','maths','find the shape',0,''],
+     ['One more, one less','maths','nudge the number',0,''],
+     ['Number pairs to 5','maths','make five',0,''],
+     ['Code a path','coding','steps to the star',0,'']],
+   'creativity':[
+     ['Tap to paint','expression','free colour',1,'paint'],
+     ['Mix the colours','expression·logic','make the target',0,'cr2'],
+     ['Make a beat','expression','tap the rhythm',0,''],
+     ['A magical animal','expression','build a creature',0,''],
+     ['Sequence a story','coding·reading','order the pictures',0,''],
+     ['Colour the mood','expression·behaviour','feelings in colour',0,''],
+     ['My family portrait','expression·leadership','draw your people',0,''],
+     ['Animate my drawing','coding','frames that move',0,'']],
+   'discovery':[
+     ['Animal sounds','science','match the sound',1,'sound'],
+     ['Five senses','science','which organ?',0,'di2'],
+     ['Day & night animals','science','sun or moon?',0,''],
+     ['What plants need','science·behaviour','light, water, love',0,''],
+     ['Weather watchers','science','read the sky',0,''],
+     ['Land & sea homes','science·behaviour','where they live',0,''],
+     ['My body, part two','science','inside & out',0,''],
+     ['Care for our earth','behaviour·leadership','kind to the planet',0,'']],
+   'wisdom':[
+     ['Naming feelings','behaviour','happy, sad, mad',1,'emo'],
+     ['Kind hands, kind words','behaviour·leadership','the kind choice',0,'wi2'],
+     ['Sharing & turns','behaviour','my turn, your turn',0,''],
+     ['When I feel angry','behaviour','calm-down steps',0,''],
+     ['Sorry & meaning it','behaviour·leadership','repair a moment',0,''],
+     ['Helping at home','leadership','small jobs, big pride',0,''],
+     ['A brave friend','leadership','stand up kindly',0,''],
+     ['I can lead a game','leadership','set the rules',0,'']],
+   'language':[
+     ['Letter sounds','reading','hear the letter',1,'let'],
+     ['Same letter?','reading','spot the match',0,'la2'],
+     ['Rhyming friends','reading','words that sing alike',0,''],
+     ['First words CVC','reading','c-a-t',0,''],
+     ['My name in letters','reading·leadership','spell YOU',0,''],
+     ['Feeling words','reading·behaviour','read the face',0,''],
+     ['Three-word stories','reading·leadership','tiny tales',0,''],
+     ['Show & tell','leadership','speak your story',0,'']]
+  };
+
+  // ---- tiny language-neutral Week-2 games (emoji/number/colour based) ----
+  function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function fb(ok,btn){
+    var m=$('w2m');
+    if(ok){btn.classList.add('lmu-ok');if(m){m.textContent='🎉 ';m.style.color='#3fa772';}}
+    else{btn.classList.add('lmu-no');if(m){m.textContent='🤔 try again';m.style.color='#ff7a5c';}
+      setTimeout(function(){btn.classList.remove('lmu-no');},700);}
+  }
+  var G={
+   bb2:function(a){ // count the apples -> tap the numeral
+     var n=1+Math.floor(Math.random()*5);
+     var opts=shuf([n, n<5?n+1:n-1, n>2?n-2:n+2]);
+     a.innerHTML='<div class="lmu-prompt">🍎 = ?</div><div class="lmu-apples">'+'🍎'.repeat(n)+'</div>'+
+       '<div class="lmu-row">'+opts.map(function(o){return '<button class="lmu-opt" onclick="window.__w2(this,'+(o===n)+')">'+o+'</button>';}).join('')+'</div><p id="w2m" class="lmu-msg"></p>';
+   },
+   la2:function(a){ // same letter? yes / no (visual discrimination)
+     var L='ABCDEFGHJKLMNPRST'.split('');var x=L[Math.floor(Math.random()*L.length)];
+     var same=Math.random()<0.5;var y=same?x:L.filter(function(c){return c!==x;})[0];
+     a.innerHTML='<div class="lmu-prompt">same letter?</div><div class="lmu-letters">'+x+' &nbsp; '+y+'</div>'+
+       '<div class="lmu-row"><button class="lmu-opt" onclick="window.__w2(this,'+same+')">✅</button>'+
+       '<button class="lmu-opt" onclick="window.__w2(this,'+(!same)+')">❌</button></div><p id="w2m" class="lmu-msg"></p>';
+   },
+   di2:function(a){ // five senses: experience -> tap the organ
+     var S=[['🌸',''],['🎵',''],['🍋',''],['🧊',''],['🌈','']];
+     var q=S[Math.floor(Math.random()*S.length)];
+     var opts=shuf([q[1],'👃','👂','👀','👅','✋'].filter(function(v,i,s){return s.indexOf(v)===i;})).slice(0,4);
+     if(opts.indexOf(q[1])<0)opts[0]=q[1];opts=shuf(opts);
+     a.innerHTML='<div class="lmu-prompt">'+q[0]+' → ?</div>'+
+       '<div class="lmu-row">'+opts.map(function(o){return '<button class="lmu-opt" onclick="window.__w2(this,'+(o===q[1])+')">'+o+'</button>';}).join('')+'</div><p id="w2m" class="lmu-msg"></p>';
+   },
+   wi2:function(a){ // kind vs unkind response to an upset friend
+     var Q=[['🧒😢','','😠'],['🧒🤒','🥤','🙄'],['🧒😨','🫂','😤']];
+     var q=Q[Math.floor(Math.random()*Q.length)];
+     a.innerHTML='<div class="lmu-prompt">'+q[0]+'</div>'+
+       '<div class="lmu-row"><button class="lmu-opt" onclick="window.__w2(this,true)">'+q[1]+'</button>'+
+       '<button class="lmu-opt" onclick="window.__w2(this,false)">'+q[2]+'</button></div><p id="w2m" class="lmu-msg"></p>';
+   },
+   cr2:function(a){ // mix two primaries to hit the target colour
+     var R=[['#3fa772',['#2f6bd8','#f2c200'],'green'],['#9b59b6',['#2f6bd8','#e8432f'],'purple'],['#ff8c1a',['#e8432f','#f2c200'],'orange']];
+     var q=R[Math.floor(Math.random()*R.length)];var need=q[1].slice();
+     a.innerHTML='<div class="lmu-prompt">make this 👇</div><div class="lmu-target" style="background:'+q[0]+'"></div>'+
+       '<div class="lmu-row">'+['#e8432f','#2f6bd8','#f2c200'].map(function(c){return '<button class="lmu-swatch" style="background:'+c+'" onclick="window.__mix(\''+c+'\')"></button>';}).join('')+'</div>'+
+       '<p id="w2m" class="lmu-msg">tap two</p>';
+     window.__mixP=[];window.__mixNeed=need;
+   }
+  };
+  window.__w2=function(btn,ok){fb(ok,btn);};
+  window.__mix=function(c){
+    var p=window.__mixP;p.push(c);var m=$('w2m');
+    if(p.length<2){m.textContent='tap one more';return;}
+    var ok=window.__mixNeed.every(function(x){return p.indexOf(x)>=0;});
+    m.textContent=ok?'🎉 ⭐':'🤔 not quite — try two';m.style.color=ok?'#3fa772':'#ff7a5c';
+    window.__mixP=[];
+  };
+
+  // ---- "lesson included, interactive dropping next" card (weeks 3-8 when paid) ----
+  function soonCard(wk,n){
+    return '<div class="lmu-soon"><div class="lmu-soon-wk">Week '+n+'</div>'+
+      '<h3>'+wk[0]+'</h3><div class="lmu-tags">'+wk[1].split('·').map(function(t){return '<span>'+t.trim()+'</span>';}).join('')+'</div>'+
+      '<p>'+wk[2]+'</p><div class="lmu-soon-note">🌟 Included in your plan — the full interactive lesson lands in the next content drop.</div></div>';
+  }
+
+  // ---- entitlement (the single gate: demo switch OR real subscription) ----
+  window.LMU_PAID = (window.LMU_PAID===true);
+  var CUR=null, CURW=0;
+
+  function loadWeek(id,wi){
+    CURW=wi;var area=ga();if(!area)return;var wk=WEEKS[id][wi];
+    if(wi===0){ if(typeof loadGame==='function') loadGame(W1[id]); return; }       // your original Week 1
+    if(!window.LMU_PAID && !wk[3]){ nudge(); return; }                              // locked for free
+    if(wk[4] && G[wk[4]]){ G[wk[4]](area); markStrip(wi); return; }                // a built interactive week
+    area.innerHTML=soonCard(wk,wi+1); markStrip(wi);                                // paid, interactive pending
+  }
+  function nudge(){
+    var area=ga();if(!area)return;
+    area.innerHTML='<div class="lmu-soon"><div class="lmu-soon-wk">🔒 Family plan</div>'+
+      '<h3>This week is part of the subscription</h3><p>Start your 7-day free trial — no charge until day 8 — and every island, every week opens up.</p>'+
+      '<button class="lmu-cta" onclick="location.hash=\'#pricing\'">See the family plans</button></div>';
+  }
+  function markStrip(wi){ document.querySelectorAll('.lmu-wk').forEach(function(b){b.classList.toggle('on', +b.dataset.w===wi);}); }
+
+  function buildStrip(id){
+    var area=ga();if(!area)return;
+    var old=$('lmuStrip');if(old)old.remove();
+    var strip=document.createElement('div');strip.id='lmuStrip';strip.className='lmu-strip';
+    WEEKS[id].forEach(function(wk,i){
+      var locked = i>0 && !wk[3] && !window.LMU_PAID;
+      var b=document.createElement('button');b.className='lmu-wk'+(locked?' lock':'')+(i===CURW?' on':'');
+      b.dataset.w=i;b.innerHTML=(locked?'🔒 ':'')+'W'+(i+1);b.title=wk[0];
+      b.onclick=function(){ loadWeek(id,i); };
+      strip.appendChild(b);
+    });
+    area.parentNode.insertBefore(strip, area);
+  }
+
+  // ---- wrap openIsland: keep original behaviour, add the week strip on top ----
+  var _open=openIsland;
+  window.openIsland=function(id){ CUR=id; CURW=0; _open(id); buildStrip(id); };
+
+  // ---- the demo entitlement switch (replaced by the real ITN flag in production) ----
+  function injectSwitch(){
+    if($('lmuPaidBar'))return;
+    var css=document.createElement('style');css.textContent=
+     '.lmu-strip{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 18px}'+
+     '.lmu-wk{font-family:\'Baloo 2\',system-ui,sans-serif;font-weight:700;font-size:.8rem;padding:8px 12px;border-radius:12px;'+
+       'background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16);color:#d8d2f0;cursor:pointer;transition:.15s}'+
+     '.lmu-wk:hover{border-color:#ff7a5c;color:#fff}.lmu-wk.on{background:#ff7a5c;border-color:#ff7a5c;color:#fff}'+
+     '.lmu-wk.lock{opacity:.5;cursor:not-allowed}'+
+     '.lmu-prompt{font-family:\'Baloo 2\',sans-serif;font-size:1.5rem;font-weight:800;color:#ffd98e}'+
+     '.lmu-apples{font-size:2.4rem;letter-spacing:8px;margin:6px 0 14px}.lmu-letters{font-size:2.6rem;font-weight:800;color:#fff;margin:6px 0 14px}'+
+     '.lmu-target{width:64px;height:64px;border-radius:16px;margin:6px auto 14px;border:3px solid rgba(255,255,255,.25)}'+
+     '.lmu-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}'+
+     '.lmu-opt{font-family:\'Baloo 2\',sans-serif;font-weight:700;font-size:1.4rem;min-width:62px;padding:12px 16px;border-radius:14px;'+
+       'background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.18);color:#fff;cursor:pointer;transition:.12s}'+
+     '.lmu-opt:active{transform:scale(.94)}.lmu-ok{background:rgba(63,167,114,.3);border-color:#3fa772}'+
+     '.lmu-no{background:rgba(255,122,92,.3);border-color:#ff7a5c;animation:lmush .4s}'+
+     '@keyframes lmush{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}'+
+     '.lmu-swatch{width:48px;height:48px;border-radius:50%;border:3px solid rgba(255,255,255,.25);cursor:pointer}'+
+     '.lmu-msg{font-family:\'Baloo 2\',sans-serif;font-weight:700;min-height:24px;margin-top:10px;color:#d8d2f0}'+
+     '.lmu-soon{text-align:center;max-width:420px}.lmu-soon-wk{font-family:\'Baloo 2\',sans-serif;font-weight:700;color:#ff7a5c;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem}'+
+     '.lmu-soon h3{font-family:\'Baloo 2\',sans-serif;font-size:1.4rem;color:#fff;margin:6px 0}'+
+     '.lmu-soon p{color:#d8d2f0;margin:8px 0}.lmu-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}'+
+     '.lmu-tags span{font-size:.68rem;font-weight:700;background:rgba(255,217,142,.16);color:#ffd98e;padding:3px 10px;border-radius:999px}'+
+     '.lmu-soon-note{font-size:.82rem;color:#9fe6c2;background:rgba(63,167,114,.14);border:1px solid rgba(63,167,114,.35);border-radius:12px;padding:10px 12px;margin-top:12px}'+
+     '.lmu-cta{margin-top:14px;font-family:\'Baloo 2\',sans-serif;font-weight:700;background:#ff7a5c;color:#fff;border:none;padding:12px 22px;border-radius:999px;cursor:pointer}'+
+     '#lmuPaidBar{position:fixed;left:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:9px;background:#221a47;'+
+       'border:1px solid rgba(255,255,255,.16);color:#fff;font-family:\'Baloo 2\',sans-serif;font-weight:700;font-size:.78rem;padding:9px 13px;border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.4)}'+
+     '#lmuPaidBar .sw{width:40px;height:22px;border-radius:999px;background:rgba(255,255,255,.2);position:relative;transition:.2s;cursor:pointer;flex-shrink:0}'+
+     '#lmuPaidBar .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}'+
+     '#lmuPaidBar.on .sw{background:#3fa772}#lmuPaidBar.on .sw::after{left:21px}'+
+     '.lmu-toast2{position:fixed;left:50%;bottom:74px;transform:translateX(-50%) translateY(14px);background:#3fa772;color:#fff;'+
+       'font-family:\'Baloo 2\',sans-serif;font-weight:700;padding:11px 20px;border-radius:999px;box-shadow:0 14px 34px rgba(63,167,114,.5);opacity:0;transition:.3s;z-index:61;pointer-events:none}'+
+     '.lmu-toast2.show{opacity:1;transform:translateX(-50%) translateY(0)}';
+    document.head.appendChild(css);
+    var bar=document.createElement('div');bar.id='lmuPaidBar';
+    bar.innerHTML='<span class="sw"></span><span>🎓 Paid student</span>';
+    bar.onclick=function(){
+      window.LMU_PAID=!window.LMU_PAID;bar.classList.toggle('on',window.LMU_PAID);
+      if(CUR){ buildStrip(CUR); loadWeek(CUR, CURW); }
+      var t=document.createElement('div');t.className='lmu-toast2';
+      t.textContent=window.LMU_PAID?'🔓 All weeks unlocked — full plan view':'🔒 Free view — Week 1 + teasers';
+      document.body.appendChild(t);requestAnimationFrame(function(){t.classList.add('show');});
+      setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove();},350);},1700);
+    };
+    document.body.appendChild(bar);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',injectSwitch); else injectSwitch();
+})();
+</script>
 </body>
 </html>
