@@ -259,6 +259,13 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 20px;text-align:c
   .avatars,.chips{justify-content:center}
 }
 </style>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+</script>
 </head>
 <body>
 <script>document.documentElement.className+=' js';</script>
